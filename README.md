@@ -1,0 +1,2 @@
+# logman
+Haskell log processor
