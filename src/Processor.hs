@@ -4,8 +4,9 @@ module Processor
     ( run
     ) where
 
-import Prelude hiding (putStrLn)
-import Data.ByteString.Lazy.Char8 (putStrLn)
+import Prelude hiding (putStrLn, appendFile)
+import Data.ByteString.Lazy (ByteString)
+import Data.ByteString.Lazy.Char8 (putStrLn, appendFile)
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import LogEntry
@@ -37,12 +38,18 @@ usernameFilter o es =
     Just u  -> filter (\(e, r) -> compareUsername e u) es
 
 writeOutput :: Options -> [LogData] -> IO ()
-writeOutput _ d = go d
+writeOutput o d = go d
   where 
     go []         = return ()
     go ((_,e):es) = do 
-        putStrLn e
+        output o e
         go es
+
+output :: Options -> ByteString -> IO ()
+output o = 
+  case optOutputFile o of
+    Nothing -> putStrLn
+    Just f  -> appendFile f
 
 processFile :: Options -> [LogData] -> IO ()
 processFile o es = do
@@ -51,8 +58,12 @@ processFile o es = do
     writeOutput o es''
     return ()
 
+readLog :: [String] -> IO [LogData]
+readLog []    = readLogFromStdin
+readLog (f:_) = readLogFile f
+
 run :: [String] -> IO ()
 run argv = do
   (options, n) <- parseOptions argv
-  entries      <- loadFile (head n)
+  entries      <- readLog n
   processFile options entries

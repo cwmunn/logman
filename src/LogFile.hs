@@ -1,16 +1,14 @@
 module LogFile
-      (loadFile
+      ( readLogFile
+      , readLogFromStdin
       ) where
 
-import Prelude hiding (readFile, lines)
+import Prelude hiding (readFile, lines, getContents)
 import Data.Aeson
 import Data.ByteString.Lazy
 import Data.ByteString.Lazy.Char8 (lines)
 
 import LogEntry
-
-readLogFile :: FilePath -> IO ByteString
-readLogFile fileName = readFile fileName
 
 parseLine :: ByteString -> Maybe LogEntry
 parseLine l = decode l
@@ -23,7 +21,12 @@ parseLines ls = go ls []
                     Just r  -> go ls ((r,l):rs)
                     Nothing -> go ls rs
 
-loadFile :: FilePath -> IO [LogData]
-loadFile fileName = do
-  log <- readLogFile fileName
+readLogFile :: FilePath -> IO [LogData]
+readLogFile fileName = do
+  log <- readFile fileName
+  return $ parseLines $ lines log
+
+readLogFromStdin :: IO [LogData]
+readLogFromStdin = do
+  log <- getContents
   return $ parseLines $ lines log

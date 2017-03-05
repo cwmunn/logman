@@ -1,12 +1,12 @@
 TODO:
--Command line arguments
--Filtering based on provided criteria
--Support filename or | for input
+###-Command line arguments
+###-Filtering based on provided criteria
+###-Support filename or | for input
 -pretty printing json
--output filename or stdout (for >)
--ignoring but keeping unknown json fields
+###-output filename or stdout (for >)
+###-ignoring but keeping unknown json fields (raw data is kept adjacent to parsed)
 -mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
--Filtering based on provided criteria
+####-Filtering based on provided criteria (only sessionid and username so far)
 -Handle multiple files at once
 
 Command Line Arguments (first phase)

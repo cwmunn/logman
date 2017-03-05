@@ -13,11 +13,13 @@ import Data.Maybe ( fromMaybe )
 data Options = Options
   { optSessionId   :: Maybe Text
   , optUsername    :: Maybe Text
+  , optOutputFile  :: Maybe FilePath
   } deriving Show
 
 defaultOptions = Options
-  { optSessionId = Nothing
-  , optUsername  = Nothing
+  { optSessionId  = Nothing
+  , optUsername   = Nothing
+  , optOutputFile = Nothing
   }
 
 options :: [OptDescr (Options -> Options)]
@@ -27,7 +29,10 @@ options =
       "session id",
     Option ['u'] ["username"]
       (ReqArg (\arg opts -> opts { optUsername = Just $ fromString arg }) "USERNAME")
-      "username"
+      "username",
+    Option ['o'] ["output"]
+      (ReqArg (\arg opts -> opts { optOutputFile = Just $ arg }) "OUTFILE")
+      "outfile"
   ]
 
 parseOptions :: [String] -> IO (Options, [String])
