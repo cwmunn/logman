@@ -1,10 +1,14 @@
 {-# LANGUAGE OverloadedStrings, TemplateHaskell #-}
 module LogEntry
       ( LogEntry(..)
+      , LogData
       ) where
 
 import Data.Aeson.TH
+import Data.ByteString.Lazy
 import Data.Text
+
+type LogData = (LogEntry, ByteString)
 
 data LogEntry = LogEntry 
     { name          :: Text

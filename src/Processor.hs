@@ -1,36 +1,58 @@
-{-# LANGUAGE OverloadedStrings, DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Processor
-    ( processFile
+    ( run
     ) where
 
-import Data.Aeson
+import Prelude hiding (putStrLn)
+import Data.ByteString.Lazy.Char8 (putStrLn)
+import Data.Maybe (fromMaybe)
+import Data.Text (Text)
 import LogEntry
+import LogFile
+import Options
 
-testEntry :: LogEntry
-testEntry = LogEntry 
-    { name          = "name"
-    , hostname      = "hostname"
-    , pid           = 123
-    , from          = "from"
-    , level         = 123
-    , time          = "time"
-    , msg           = "msg"
-    , v             = 0
-    , sessionId     = Just "sessionId"
-    , username      = Just "username"
-    , requestId     = Nothing
-    , cookie        = Nothing
-    , url           = Nothing
-    , method        = Nothing
-    , statusCode    = Nothing
-    , durationInMs  = Nothing
-    , objectCount   = Nothing
-  }
+compareSessionId :: LogEntry -> Text -> Bool
+compareSessionId e s = 
+  case sessionId e of
+    Just s2 -> s2 == s
+    Nothing -> False
 
-test :: Result LogEntry
-test = fromJSON (toJSON testEntry)
+sessionFilter :: Options -> [LogData] -> [LogData]
+sessionFilter o es = 
+  case optSessionId o of
+    Nothing  -> es
+    Just sid -> filter (\(e, r) -> compareSessionId e sid) es
 
+compareUsername :: LogEntry -> Text -> Bool
+compareUsername e u = 
+  case username e of
+    Just u2 -> u2 == u
+    Nothing -> False
 
-processFile :: IO ()
-processFile = undefined
+usernameFilter :: Options -> [LogData] -> [LogData]
+usernameFilter o es = 
+  case optUsername o of
+    Nothing -> es
+    Just u  -> filter (\(e, r) -> compareUsername e u) es
+
+writeOutput :: Options -> [LogData] -> IO ()
+writeOutput _ d = go d
+  where 
+    go []         = return ()
+    go ((_,e):es) = do 
+        putStrLn e
+        go es
+
+processFile :: Options -> [LogData] -> IO ()
+processFile o es = do
+    let es'  = sessionFilter  o es 
+    let es'' = usernameFilter o es'
+    writeOutput o es''
+    return ()
+
+run :: [String] -> IO ()
+run argv = do
+  (options, n) <- parseOptions argv
+  entries      <- loadFile (head n)
+  processFile options entries

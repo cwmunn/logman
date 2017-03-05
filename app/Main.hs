@@ -1,6 +1,9 @@
 module Main where
 
+import System.Environment
 import Processor
 
 main :: IO ()
-main = processFile
+main = do
+  args <- getArgs 
+  run args

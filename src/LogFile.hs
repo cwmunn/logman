@@ -15,15 +15,15 @@ readLogFile fileName = readFile fileName
 parseLine :: ByteString -> Maybe LogEntry
 parseLine l = decode l
 
-parseLines :: [ByteString] -> [LogEntry]
+parseLines :: [ByteString] -> [LogData]
 parseLines ls = go ls []
   where
     go []     rs = rs
     go (l:ls) rs = case parseLine l of
-                    Just r  -> go ls (r:rs)
+                    Just r  -> go ls ((r,l):rs)
                     Nothing -> go ls rs
 
-loadFile :: FilePath -> IO [LogEntry]
+loadFile :: FilePath -> IO [LogData]
 loadFile fileName = do
   log <- readLogFile fileName
   return $ parseLines $ lines log

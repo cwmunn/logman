@@ -17,7 +17,9 @@ library
   hs-source-dirs:      src
   exposed-modules:     Processor,
                        LogEntry,
-                       LogFile
+                       LogFile,
+                       Options,
+                       Test
   build-depends:       base >= 4.7 && < 5,
                        bytestring,
                        text,
