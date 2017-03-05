@@ -1,0 +1,4 @@
+{"name":"wwe-api","hostname":"cmunn-m1.local","pid":18110,"from":"Config","level":20,"msg":"initializing from path /Users/cmunn/Documents/dev/gws-microservices/projects/aggregators/gws-app-workspace/src/config/dev.yaml","time":"2017-03-03T22:08:35.357Z","v":0}
+{"name":"wwe-api","hostname":"cmunn-m1.local","pid":18110,"from":"Config","level":20,"msg":"authUri: http://127.0.0.1:8095","time":"2017-03-03T22:08:35.395Z","v":0}
+{"name":"wwe-api","hostname":"cmunn-m1.local","pid":18110,"from":"Config","level":20,"msg":"configUri: http://127.0.0.1:8092","time":"2017-03-03T22:08:35.396Z","v":0}
+{"name":"wwe-api","hostname":"cmunn-m1.local","pid":18110,"from":"Config","level":20,"msg":"voiceUri: http://127.0.0.1:8093","time":"2017-03-03T22:08:35.396Z","v":0}
