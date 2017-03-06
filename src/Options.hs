@@ -9,6 +9,7 @@ import Data.Text.Lazy         (Text)
 import Data.String            (fromString)
 import Data.Maybe             (fromMaybe)
 import System.Console.GetOpt
+
 data Options = Options
   { optSessionId   :: Maybe Text
   , optUsername    :: Maybe Text
