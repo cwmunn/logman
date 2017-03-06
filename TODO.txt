@@ -7,17 +7,19 @@ TODO:
 ###-ignoring but keeping unknown json fields (raw data is kept adjacent to parsed)
 -mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
 ####-Filtering based on provided criteria (only sessionid and username so far)
--Handle multiple files at once
+-Handle multiple files at once (can probably handle this via pipe)
 -Printing usage info
--Optionally output a minimal format
+###-Optionally output a minimal format
+-Fix output file option
+-Option to specify start/end times
 
 Command Line Arguments (first phase)
 
 -s <sessionId>
 -u <user>
--p (pretty print)
-
-<filename>
+-p (pretty print - not implemented)
+-m (minimal output format)
+-o <filename> (not fully implemented - sample as > outfile really)
 
 Usage: logman <options> filename
 
