@@ -6,7 +6,7 @@ module LogEntry
 
 import Data.Aeson.TH
 import Data.ByteString.Lazy
-import Data.Text
+import Data.Text.Lazy
 
 type LogData = (LogEntry, ByteString)
 

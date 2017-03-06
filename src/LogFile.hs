@@ -3,7 +3,7 @@ module LogFile
       , readLogFromStdin
       ) where
 
-import Prelude hiding (readFile, lines, getContents)
+import Prelude hiding             (readFile, lines, getContents)
 import Data.Aeson
 import Data.ByteString.Lazy
 import Data.ByteString.Lazy.Char8 (lines)
@@ -18,7 +18,7 @@ parseLines ls = go ls []
   where
     go []     rs = rs
     go (l:ls) rs = case parseLine l of
-                    Just r  -> go ls ((r,l):rs)
+                    Just r  -> go ls (rs ++ [(r,l)])
                     Nothing -> go ls rs
 
 readLogFile :: FilePath -> IO [LogData]

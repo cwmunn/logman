@@ -3,6 +3,7 @@
 module Test where
 
 import Data.Aeson
+
 import LogEntry
 
 testEntry :: LogEntry

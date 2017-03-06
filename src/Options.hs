@@ -5,34 +5,38 @@ module Options
       , parseOptions
       ) where
 
-import Data.Text (Text)
-import Data.String (fromString)
+import Data.Text.Lazy         (Text)
+import Data.String            (fromString)
+import Data.Maybe             (fromMaybe)
 import System.Console.GetOpt
-import Data.Maybe ( fromMaybe )
-
 data Options = Options
   { optSessionId   :: Maybe Text
   , optUsername    :: Maybe Text
   , optOutputFile  :: Maybe FilePath
+  , optMessageOnly :: Bool
   } deriving Show
 
 defaultOptions = Options
-  { optSessionId  = Nothing
-  , optUsername   = Nothing
-  , optOutputFile = Nothing
+  { optSessionId   = Nothing
+  , optUsername    = Nothing
+  , optOutputFile  = Nothing
+  , optMessageOnly = False
   }
 
 options :: [OptDescr (Options -> Options)]
 options =
   [ Option ['s'] ["session-id"]
       (ReqArg (\arg opts -> opts { optSessionId = Just $ fromString arg }) "SESSIONID")
-      "session id",
-    Option ['u'] ["username"]
+      "session id"
+  , Option ['u'] ["username"]
       (ReqArg (\arg opts -> opts { optUsername = Just $ fromString arg }) "USERNAME")
-      "username",
-    Option ['o'] ["output"]
+      "username"
+  , Option ['o'] ["output"]
       (ReqArg (\arg opts -> opts { optOutputFile = Just $ arg }) "OUTFILE")
       "outfile"
+  , Option ['m']     ["minimal"]
+        (NoArg (\ opts -> opts { optMessageOnly = True }))
+        "minimal output"
   ]
 
 parseOptions :: [String] -> IO (Options, [String])

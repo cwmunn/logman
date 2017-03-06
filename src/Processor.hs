@@ -4,11 +4,13 @@ module Processor
     ( run
     ) where
 
-import Prelude hiding (putStrLn, appendFile)
-import Data.ByteString.Lazy (ByteString)
+import Prelude hiding             (putStrLn, appendFile, concat)
+import Data.ByteString.Lazy       (ByteString)
 import Data.ByteString.Lazy.Char8 (putStrLn, appendFile)
-import Data.Maybe (fromMaybe)
-import Data.Text (Text)
+import Data.Maybe                 (fromMaybe)
+import Data.Text.Lazy             (Text, concat)
+import Data.Text.Lazy.Encoding    (encodeUtf8)
+
 import LogEntry
 import LogFile
 import Options
@@ -37,12 +39,20 @@ usernameFilter o es =
     Nothing -> es
     Just u  -> filter (\(e, r) -> compareUsername e u) es
 
-writeOutput :: Options -> [LogData] -> IO ()
-writeOutput o d = go d
+writeFullOutput :: Options -> [LogData] -> IO ()
+writeFullOutput o d = go d
   where 
     go []         = return ()
     go ((_,e):es) = do 
         output o e
+        go es
+
+writeMinimal :: Options -> [LogData] -> IO ()
+writeMinimal o d = go d
+  where 
+    go []          = return ()
+    go ((le,_):es) = do 
+        output o $ encodeUtf8 $ concat $ (time le) : " " : (msg le) : []
         go es
 
 output :: Options -> ByteString -> IO ()
@@ -55,8 +65,9 @@ processFile :: Options -> [LogData] -> IO ()
 processFile o es = do
     let es'  = sessionFilter  o es 
     let es'' = usernameFilter o es'
-    writeOutput o es''
-    return ()
+    case optMessageOnly o of 
+      True  -> writeMinimal    o es''
+      False -> writeFullOutput o es''
 
 readLog :: [String] -> IO [LogData]
 readLog []    = readLogFromStdin
