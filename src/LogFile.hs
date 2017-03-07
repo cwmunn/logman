@@ -10,16 +10,14 @@ import Data.ByteString.Lazy.Char8 (lines)
 
 import LogEntry
 
-parseLine :: ByteString -> Maybe LogEntry
-parseLine l = decode l
+parseLine :: ByteString -> [LogData]
+parseLine l = case decode l of
+  Nothing    -> []
+  Just entry -> [(entry, l)]
 
 parseLines :: [ByteString] -> [LogData]
-parseLines ls = go ls []
-  where
-    go []     rs = rs
-    go (l:ls) rs = case parseLine l of
-                    Just r  -> go ls (rs ++ [(r,l)])
-                    Nothing -> go ls rs
+parseLines []     = []
+parseLines (l:ls) = (parseLine l) ++ (parseLines ls)
 
 readLogFile :: FilePath -> IO [LogData]
 readLogFile fileName = do
@@ -28,5 +26,5 @@ readLogFile fileName = do
 
 readLogFromStdin :: IO [LogData]
 readLogFromStdin = do
-  log <- getContents
-  return $ parseLines $ lines log
+  contents <- getContents
+  return $ parseLines . lines $ contents
