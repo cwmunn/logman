@@ -10,8 +10,10 @@ TODO:
 -Handle multiple files at once (can probably handle this via pipe)
 -Printing usage info
 ###-Optionally output a minimal format
--Fix output file option
--Option to specify start/end times
+###-Fix output file option
+###-Option to specify start/end times
+-Monad for filters
+
 
 Command Line Arguments (first phase)
 
@@ -20,6 +22,8 @@ Command Line Arguments (first phase)
 -p (pretty print - not implemented)
 -m (minimal output format)
 -o <filename> (not fully implemented - sample as > outfile really)
+--start-time "2017-03-03 22:07:35.000Z" 
+--end-time "2017-03-03 22:08:35.000Z"
 
 Usage: logman <options> filename
 

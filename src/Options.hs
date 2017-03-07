@@ -5,9 +5,10 @@ module Options
       , parseOptions
       ) where
 
-import Data.Text.Lazy         (Text)
+import Data.Text.Lazy         (Text, replace)
 import Data.String            (fromString)
 import Data.Maybe             (fromMaybe)
+import Data.Time.Clock
 import System.Console.GetOpt
 
 data Options = Options
@@ -15,6 +16,8 @@ data Options = Options
   , optUsername    :: Maybe Text
   , optOutputFile  :: Maybe FilePath
   , optMessageOnly :: Bool
+  , optStartTime   :: Maybe UTCTime
+  , optEndTime     :: Maybe UTCTime
   } deriving Show
 
 defaultOptions = Options
@@ -22,7 +25,12 @@ defaultOptions = Options
   , optUsername    = Nothing
   , optOutputFile  = Nothing
   , optMessageOnly = False
+  , optStartTime   = Nothing
+  , optEndTime     = Nothing
   }
+
+toUTCTime :: String -> UTCTime
+toUTCTime s = read s
 
 options :: [OptDescr (Options -> Options)]
 options =
@@ -35,6 +43,12 @@ options =
   , Option ['o'] ["output"]
       (ReqArg (\arg opts -> opts { optOutputFile = Just $ arg }) "OUTFILE")
       "outfile"
+  , Option ['t'] ["start-time"]
+      (ReqArg (\arg opts -> opts { optStartTime = Just $ toUTCTime arg }) "TIME")
+      "start time"
+  , Option ['e'] ["end-time"]
+      (ReqArg (\arg opts -> opts { optEndTime = Just $ toUTCTime arg }) "TIME")
+      "end time"
   , Option ['m']     ["minimal"]
         (NoArg (\ opts -> opts { optMessageOnly = True }))
         "minimal output"
