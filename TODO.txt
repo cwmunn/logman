@@ -5,9 +5,9 @@ TODO:
 -Option to show only incoming API requests, responses, and msg publication
 -Check if Aeson allows using a prefix on record names
 -Add an option to print errors, otherwise ignore them
--Refactor Output.hs
 -Add a version number and -v option
 -mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
+-update readme with build instructions and usage info / examples
 
 ###-Command line arguments
 ###-Filtering based on provided criteria
@@ -19,6 +19,7 @@ TODO:
 ###-Fix output file option
 ###-Option to specify start/end times
 ###-Monad for filters
+###-Refactor Output.hs
 
 
 Command Line Arguments (first phase)

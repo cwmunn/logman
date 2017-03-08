@@ -14,31 +14,28 @@ import LogMan.LogEntry
 import LogMan.LogFile
 import LogMan.Options
 
-writeFullOutput :: Options -> [LogData] -> IO ()
-writeFullOutput o d = go d
-  where 
-    go []         = return ()
-    go ((_,e):es) = do 
-        output o e
-        go es
+writeFullOutput :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
+writeFullOutput [] = return ()
+writeFullOutput ((_,e):es) = do 
+  output e
+  writeFullOutput es
+ 
+writeMinimal :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
+writeMinimal [] = return ()
+writeMinimal ((le,_):es) = do 
+  output $ encodeUtf8 $ concat $ (time le) : " " : (msg le) : []
+  writeMinimal es
 
-writeMinimal :: Options -> [LogData] -> IO ()
-writeMinimal o d = go d
-  where 
-    go []          = return ()
-    go ((le,_):es) = do 
-        output o $ encodeUtf8 $ concat $ (time le) : " " : (msg le) : []
-        go es
-
-output :: Options -> ByteString -> IO ()
-output o = 
+output :: (MonadIO m, MonadState Options m) => ByteString -> m ()
+output s = do
+  o <- get
   case optOutputFile o of
-    Nothing -> putStrLn
-    Just f  -> appendFile f
+    Nothing -> liftIO $ putStrLn s
+    Just f  -> liftIO $ appendFile f s
 
 writeOutput :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
 writeOutput es = do
   o <- get
   case optMessageOnly o of 
-    True  -> liftIO $ writeMinimal o es
-    False -> liftIO $ writeFullOutput o es
+    True  -> writeMinimal    es
+    False -> writeFullOutput es
