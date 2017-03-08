@@ -16,6 +16,7 @@ TODO:
 -Option to show only incoming API requests, responses, and msg publication
 -Check if Aeson allows using a prefix on record names
 -Add an option to print errors, otherwise ignore them
+-Refactor Output.hs
 
 Command Line Arguments (first phase)
 

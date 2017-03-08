@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module LogMan.LogFile
-      ( readLogFile
-      , readLogFromStdin
+      ( readLogEntries
       ) where
 
 import Prelude hiding             (readFile, lines, getContents)
@@ -10,7 +9,7 @@ import Data.ByteString.Lazy       (ByteString, readFile, getContents)
 import Data.ByteString.Lazy.Char8 (lines, unpack)
 import Data.Monoid ((<>))
 
-import LogMan.LogEntry hiding (error)
+import LogMan.LogEntry hiding     (error)
 
 parseLine :: ByteString -> [LogData]
 parseLine l = case eitherDecode l of
@@ -30,3 +29,7 @@ readLogFromStdin :: IO [LogData]
 readLogFromStdin = do
   contents <- getContents
   return $ parseLines . lines $ contents
+
+readLogEntries :: [String] -> IO [LogData]
+readLogEntries []    = readLogFromStdin
+readLogEntries (f:_) = readLogFile f
