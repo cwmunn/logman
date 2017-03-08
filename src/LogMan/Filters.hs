@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
-module Filters
+module LogMan.Filters
       (applyFilters
       ) where
 
@@ -8,8 +8,8 @@ import Data.ByteString.Lazy       (ByteString)
 import Data.Text.Lazy             (Text, replace, unpack)
 import Data.Time.Clock
 
-import LogEntry
-import Options
+import LogMan.LogEntry
+import LogMan.Options
 
 compareSessionId :: LogEntry -> Text -> Bool
 compareSessionId e s = 

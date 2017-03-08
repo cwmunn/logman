@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
-module Output
+module LogMan.Output
       ( writeOutput
       ) where
 
@@ -10,9 +10,9 @@ import Data.ByteString.Lazy.Char8 (putStrLn, appendFile)
 import Data.Text.Lazy             (Text, concat)
 import Data.Text.Lazy.Encoding    (encodeUtf8)
 
-import LogEntry
-import LogFile
-import Options
+import LogMan.LogEntry
+import LogMan.LogFile
+import LogMan.Options
 
 writeFullOutput :: Options -> [LogData] -> IO ()
 writeFullOutput o d = go d

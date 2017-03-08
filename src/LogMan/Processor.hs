@@ -1,15 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
-module Processor
+module LogMan.Processor
     ( run
     ) where
 
 import Control.Monad.State
 
-import Filters
-import LogEntry
-import LogFile
-import Options
-import Output
+import LogMan.Filters
+import LogMan.LogEntry
+import LogMan.LogFile
+import LogMan.Options
+import LogMan.Output
 
 processFile :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
 processFile es = applyFilters es >>= writeOutput

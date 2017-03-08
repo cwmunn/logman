@@ -7,8 +7,8 @@ import Data.Aeson
 import Data.Time.Clock
 import Data.Text
 
-import LogEntry
-import Options
+import LogMan.LogEntry
+import LogMan.Options
 
 testEntry :: LogEntry
 testEntry = LogEntry 

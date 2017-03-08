@@ -15,12 +15,12 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Processor,
-                       Filters,
-                       LogEntry,
-                       LogFile,
-                       Options,
-                       Output,
+  exposed-modules:     LogMan.Processor,
+                       LogMan.Filters,
+                       LogMan.LogEntry,
+                       LogMan.LogFile,
+                       LogMan.Options,
+                       LogMan.Output,
                        Test
   build-depends:       base >= 4.7 && < 5,
                        bytestring,

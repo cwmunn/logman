@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}
-
-module Options
+module LogMan.Options
       ( Options(..)
       , parseOptions
       ) where

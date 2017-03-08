@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module LogFile
+module LogMan.LogFile
       ( readLogFile
       , readLogFromStdin
       ) where
@@ -10,7 +10,7 @@ import Data.ByteString.Lazy       (ByteString, readFile, getContents)
 import Data.ByteString.Lazy.Char8 (lines, unpack)
 import Data.Monoid ((<>))
 
-import LogEntry hiding (error)
+import LogMan.LogEntry hiding (error)
 
 parseLine :: ByteString -> [LogData]
 parseLine l = case eitherDecode l of

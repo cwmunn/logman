@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, TemplateHaskell #-}
-module LogEntry
+module LogMan.LogEntry
       ( LogEntry(..)
       , LogData
       ) where
