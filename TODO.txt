@@ -1,22 +1,25 @@
 TODO:
-###-Command line arguments
-###-Filtering based on provided criteria
-###-Support filename or | for input
--pretty printing json
-###-output filename or stdout (for >)
-###-ignoring but keeping unknown json fields (raw data is kept adjacent to parsed)
--mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
-####-Filtering based on provided criteria (only sessionid and username so far)
 -Handle multiple files at once (can probably handle this via pipe)
 -Printing usage info
-###-Optionally output a minimal format
-###-Fix output file option
-###-Option to specify start/end times
-###-Monad for filters
+-pretty printing json
 -Option to show only incoming API requests, responses, and msg publication
 -Check if Aeson allows using a prefix on record names
 -Add an option to print errors, otherwise ignore them
 -Refactor Output.hs
+-Add a version number and -v option
+-mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
+
+###-Command line arguments
+###-Filtering based on provided criteria
+###-Support filename or | for input
+###-output filename or stdout (for >)
+###-ignoring but keeping unknown json fields (raw data is kept adjacent to parsed)
+####-Filtering based on provided criteria (only sessionid and username so far)
+###-Optionally output a minimal format
+###-Fix output file option
+###-Option to specify start/end times
+###-Monad for filters
+
 
 Command Line Arguments (first phase)
 
@@ -24,7 +27,7 @@ Command Line Arguments (first phase)
 -u <user>
 -p (pretty print - not implemented)
 -m (minimal output format)
--o <filename> (not fully implemented - sample as > outfile really)
+-o <filename> (same as > filename)
 --start-time "2017-03-03 22:07:35.000Z" 
 --end-time "2017-03-03 22:08:35.000Z"
 
