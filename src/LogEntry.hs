@@ -25,7 +25,7 @@ data LogEntry = LogEntry
     , sessionId     :: Maybe Text
     , username      :: Maybe Text
     , requestId     :: Maybe Text
-    , cookie        :: Maybe Array
+    , cookie        :: Maybe Value
     , url           :: Maybe Text
     , method        :: Maybe Text
     , statusCode    :: Maybe Int
