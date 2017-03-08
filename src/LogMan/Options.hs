@@ -4,9 +4,8 @@ module LogMan.Options
       , parseOptions
       ) where
 
-import Data.Text.Lazy         (Text, replace)
+import Data.Text.Lazy         (Text)
 import Data.String            (fromString)
-import Data.Maybe             (fromMaybe)
 import Data.Time.Clock
 import System.Console.GetOpt
 
