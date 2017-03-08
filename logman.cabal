@@ -16,21 +16,24 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Processor,
+                       Filters,
                        LogEntry,
                        LogFile,
                        Options,
+                       Output,
                        Test
   build-depends:       base >= 4.7 && < 5,
                        bytestring,
                        text,
                        aeson,
-                       time
+                       time,
+                       mtl
   default-language:    Haskell2010
 
 executable logman-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -XOverloadedStrings
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , logman
   default-language:    Haskell2010

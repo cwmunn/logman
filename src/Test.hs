@@ -1,12 +1,14 @@
-{-# LANGUAGE OverloadedStrings #-}
-
+{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 module Test where
 
 import Prelude hiding (replace, error)
+import Control.Monad.State
 import Data.Aeson
 import Data.Time.Clock
 import Data.Text
+
 import LogEntry
+import Options
 
 testEntry :: LogEntry
 testEntry = LogEntry 
@@ -45,3 +47,12 @@ timeTest3 t = read $ unpack t
 
 replaceTest :: Text
 replaceTest = replace "T" " " "2017-03-03T22:08:35.396Z"
+
+filterExample1 :: (MonadState Options m) => [LogData] -> m [LogData]
+filterExample1 le = return le
+
+filterExample2 :: (MonadState Options m) => [LogData] -> m [LogData]
+filterExample2 le = return le
+
+applyFilters :: (MonadState Options m) => [LogData] -> m [LogData]
+applyFilters le = filterExample1 le >>= filterExample2

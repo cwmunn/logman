@@ -1,104 +1,26 @@
-{-# LANGUAGE OverloadedStrings #-}
-
+{-# LANGUAGE FlexibleContexts #-}
 module Processor
     ( run
     ) where
 
-import Prelude hiding             (putStrLn, appendFile, concat)
-import Data.ByteString.Lazy       (ByteString)
-import Data.ByteString.Lazy.Char8 (putStrLn, appendFile)
-import Data.Maybe                 (fromMaybe)
-import Data.Text.Lazy             (Text, concat, replace, unpack)
-import Data.Text.Lazy.Encoding    (encodeUtf8)
-import Data.Time.Clock
+import Control.Monad.State
 
+import Filters
 import LogEntry
 import LogFile
 import Options
+import Output
 
-compareSessionId :: LogEntry -> Text -> Bool
-compareSessionId e s = 
-  case sessionId e of
-    Just s2 -> s2 == s
-    Nothing -> False
+processFile :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
+processFile es = applyFilters es >>= writeOutput
 
-sessionFilter :: Options -> [LogData] -> [LogData]
-sessionFilter o es = 
-  case optSessionId o of
-    Nothing  -> es
-    Just sid -> filter (\(e, r) -> compareSessionId e sid) es
-
-compareUsername :: LogEntry -> Text -> Bool
-compareUsername e u = 
-  case username e of
-    Just u2 -> u2 == u
-    Nothing -> False
-
-convertTime :: Text -> UTCTime
-convertTime t = read $ unpack $ replace "T" " " t
-
-isBeforeTime :: LogEntry -> UTCTime -> Bool
-isBeforeTime e endTime = convertTime (time e) < endTime
-
-isAfterTime :: LogEntry -> UTCTime -> Bool
-isAfterTime e starTime = convertTime (time e)  > starTime
-
-startTimeFilter :: Options -> [LogData] -> [LogData]
-startTimeFilter o es =
-  case optStartTime o of
-    Nothing        -> es
-    Just startTime -> filter (\(e, r) -> isAfterTime e startTime) es
-
-endTimeFilter :: Options -> [LogData] -> [LogData]
-endTimeFilter o es =
-  case optEndTime o of
-    Nothing        -> es
-    Just endTime -> filter (\(e, r) -> isBeforeTime e endTime) es
-
-usernameFilter :: Options -> [LogData] -> [LogData]
-usernameFilter o es = 
-  case optUsername o of
-    Nothing -> es
-    Just u  -> filter (\(e, r) -> compareUsername e u) es
-
-writeFullOutput :: Options -> [LogData] -> IO ()
-writeFullOutput o d = go d
-  where 
-    go []         = return ()
-    go ((_,e):es) = do 
-        output o e
-        go es
-
-writeMinimal :: Options -> [LogData] -> IO ()
-writeMinimal o d = go d
-  where 
-    go []          = return ()
-    go ((le,_):es) = do 
-        output o $ encodeUtf8 $ concat $ (time le) : " " : (msg le) : []
-        go es
-
-output :: Options -> ByteString -> IO ()
-output o = 
-  case optOutputFile o of
-    Nothing -> putStrLn
-    Just f  -> appendFile f
-
-processFile :: Options -> [LogData] -> IO ()
-processFile o es = do
-  let es'  = sessionFilter  o es    -- TODO make a filter monad
-  let es'' = usernameFilter o es'
-  let es''' = startTimeFilter o es''
-  let es'''' = endTimeFilter o es'''
-  case optMessageOnly o of 
-    True  -> writeMinimal    o es''''
-    False -> writeFullOutput o es''''
-
-readLog :: [String] -> IO [LogData]
-readLog []    = readLogFromStdin
-readLog (f:_) = readLogFile f
+readLogEntries :: [String] -> IO [LogData]
+readLogEntries []    = readLogFromStdin
+readLogEntries (f:_) = readLogFile f
 
 run :: [String] -> IO ()
 run argv = do
   (options, n) <- parseOptions argv
-  entries      <- readLog n
-  processFile options entries
+  entries      <- readLogEntries n
+  runStateT (processFile entries) options
+  return ()

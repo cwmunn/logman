@@ -12,9 +12,10 @@ TODO:
 ###-Optionally output a minimal format
 ###-Fix output file option
 ###-Option to specify start/end times
--Monad for filters
+###-Monad for filters
 -Option to show only incoming API requests, responses, and msg publication
 -Check if Aeson allows using a prefix on record names
+-Add an option to print errors, otherwise ignore them
 
 Command Line Arguments (first phase)
 
