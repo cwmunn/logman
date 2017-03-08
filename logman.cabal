@@ -21,6 +21,7 @@ library
                        LogMan.LogFile,
                        LogMan.Options,
                        LogMan.Output,
+                       LogMan.Utils
                        Test
   build-depends:       base >= 4.7 && < 5,
                        bytestring,
