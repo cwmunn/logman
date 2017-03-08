@@ -4,6 +4,7 @@ module LogEntry
       , LogData
       ) where
 
+import Data.Aeson
 import Data.Aeson.TH
 import Data.ByteString.Lazy
 import Data.Text.Lazy
@@ -19,10 +20,12 @@ data LogEntry = LogEntry
     , time          :: Text
     , msg           :: Text 
     , v             :: Int
+    , error         :: Maybe Value
+    , contentLength :: Maybe String
     , sessionId     :: Maybe Text
     , username      :: Maybe Text
     , requestId     :: Maybe Text
-    , cookie        :: Maybe Text
+    , cookie        :: Maybe Array
     , url           :: Maybe Text
     , method        :: Maybe Text
     , statusCode    :: Maybe Int

@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module LogFile
       ( readLogFile
       , readLogFromStdin
@@ -5,19 +6,20 @@ module LogFile
 
 import Prelude hiding             (readFile, lines, getContents)
 import Data.Aeson
-import Data.ByteString.Lazy
-import Data.ByteString.Lazy.Char8 (lines)
+import Data.ByteString.Lazy       (ByteString, readFile, getContents)
+import Data.ByteString.Lazy.Char8 (lines, unpack)
+import Data.Monoid ((<>))
 
-import LogEntry
+import LogEntry hiding (error)
 
 parseLine :: ByteString -> [LogData]
-parseLine l = case decode l of
-  Nothing    -> []
-  Just entry -> [(entry, l)]
+parseLine l = case eitherDecode l of
+  Left  err   -> error $ err <> " in log entry:\n" <> (unpack l)
+  Right entry -> [(entry, l)]
 
 parseLines :: [ByteString] -> [LogData]
 parseLines []     = []
-parseLines (l:ls) = (parseLine l) ++ (parseLines ls)
+parseLines (l:ls) = (parseLine  l) ++ (parseLines ls)
 
 readLogFile :: FilePath -> IO [LogData]
 readLogFile fileName = do

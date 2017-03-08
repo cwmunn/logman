@@ -2,7 +2,7 @@
 
 module Test where
 
-import Prelude hiding (replace)
+import Prelude hiding (replace, error)
 import Data.Aeson
 import Data.Time.Clock
 import Data.Text
@@ -18,6 +18,7 @@ testEntry = LogEntry
     , time          = "time"
     , msg           = "msg"
     , v             = 0
+    , error         = Nothing
     , sessionId     = Just "sessionId"
     , username      = Just "username"
     , requestId     = Nothing
@@ -27,6 +28,7 @@ testEntry = LogEntry
     , statusCode    = Nothing
     , durationInMs  = Nothing
     , objectCount   = Nothing
+    , contentLength = Nothing
   }
 
 test :: Result LogEntry
