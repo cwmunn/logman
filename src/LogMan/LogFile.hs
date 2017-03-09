@@ -8,7 +8,7 @@ import Control.Monad.State
 import Data.Aeson
 import Data.ByteString.Lazy       (ByteString, readFile, getContents)
 import Data.ByteString.Lazy.Char8 (lines, unpack)
-import Data.Monoid ((<>))
+import Data.Monoid                ((<>))
 
 import LogMan.LogEntry hiding     (error)
 import LogMan.Options

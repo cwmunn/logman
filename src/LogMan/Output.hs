@@ -7,7 +7,7 @@ import Prelude hiding             (putStrLn, appendFile, concat, error)
 import Control.Monad.State
 import Data.ByteString.Lazy       (ByteString)
 import Data.ByteString.Lazy.Char8 (putStrLn, appendFile, pack)
-import Data.Monoid ((<>))
+import Data.Monoid                ((<>))
 import Data.Text.Lazy             (Text, concat, unpack)
 import Data.Text.Lazy.Encoding    (encodeUtf8)
 
