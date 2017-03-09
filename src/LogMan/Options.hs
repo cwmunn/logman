@@ -16,6 +16,7 @@ data Options = Options
   , optMessageOnly :: Bool
   , optStartTime   :: Maybe UTCTime
   , optEndTime     :: Maybe UTCTime
+  , optSplitAll    :: Bool
   } deriving Show
 
 defaultOptions = Options
@@ -25,6 +26,7 @@ defaultOptions = Options
   , optMessageOnly = False
   , optStartTime   = Nothing
   , optEndTime     = Nothing
+  , optSplitAll    = False
   }
 
 toUTCTime :: String -> UTCTime
@@ -50,6 +52,9 @@ options =
   , Option ['m']     ["minimal"]
         (NoArg (\ opts -> opts { optMessageOnly = True }))
         "minimal output"
+  , Option ['a']     ["split-all"]
+        (NoArg (\ opts -> opts { optSplitAll = True }))
+        "split activity into user/session based files"
   ]
 
 parseOptions :: [String] -> IO (Options, [String])
