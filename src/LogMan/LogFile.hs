@@ -1,15 +1,17 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 module LogMan.LogFile
       ( readLogEntries
       ) where
 
 import Prelude hiding             (readFile, lines, getContents)
+import Control.Monad.State
 import Data.Aeson
 import Data.ByteString.Lazy       (ByteString, readFile, getContents)
 import Data.ByteString.Lazy.Char8 (lines, unpack)
 import Data.Monoid ((<>))
 
 import LogMan.LogEntry hiding     (error)
+import LogMan.Options
 
 parseLine :: ByteString -> [LogData]
 parseLine l = case eitherDecode l of
@@ -30,6 +32,6 @@ readLogFromStdin = do
   contents <- getContents
   return $ parseLines . lines $ contents
 
-readLogEntries :: [String] -> IO [LogData]
-readLogEntries []    = readLogFromStdin
-readLogEntries (f:_) = readLogFile f
+readLogEntries :: (MonadIO m, MonadState Options m) => [String] -> m [LogData]
+readLogEntries []    = liftIO $ readLogFromStdin
+readLogEntries (f:_) = liftIO $ readLogFile f

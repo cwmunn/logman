@@ -11,12 +11,13 @@ import LogMan.LogFile
 import LogMan.Options
 import LogMan.Output
 
-processEntries :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
-processEntries es = applyFilters es >>= writeOutput
+processEntries :: (MonadIO m, MonadState Options m) => [String] -> m ()
+processEntries n = do
+  es <- readLogEntries n
+  applyFilters es >>= writeOutput
 
 run :: [String] -> IO ()
 run argv = do
   (options, n) <- parseOptions argv
-  entries      <- readLogEntries n
-  runStateT (processEntries entries) options
+  runStateT (processEntries n) options
   return ()
