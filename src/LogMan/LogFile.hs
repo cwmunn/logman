@@ -13,25 +13,29 @@ import Data.Monoid ((<>))
 import LogMan.LogEntry hiding     (error)
 import LogMan.Options
 
-parseLine :: ByteString -> [LogData]
-parseLine l = case eitherDecode l of
-  Left  err   -> error $ err <> " in log entry:\n" <> (unpack l)
+parseLine :: Options -> ByteString -> [LogData]
+parseLine o l = case eitherDecode l of
   Right entry -> [(entry, l)]
+  Left  err   -> case optIgnoreParseErrors o of
+                  False -> error $ err <> " in log entry:\n" <> (unpack l)
+                  True  -> []
+  
+parseLines :: Options -> [ByteString] -> [LogData]
+parseLines o []     = []
+parseLines o (l:ls) = (parseLine o l) ++ (parseLines o ls) -- CM: TODO
 
-parseLines :: [ByteString] -> [LogData]
-parseLines []     = []
-parseLines (l:ls) = (parseLine  l) ++ (parseLines ls)
-
-readLogFile :: FilePath -> IO [LogData]
+readLogFile :: (MonadIO m, MonadState Options m) => FilePath -> m [LogData]
 readLogFile fileName = do
-  log <- readFile fileName
-  return $ parseLines $ lines log
+  o <- get
+  log <- liftIO $ readFile fileName
+  return $ parseLines o $ lines log
 
-readLogFromStdin :: IO [LogData]
+readLogFromStdin :: (MonadIO m, MonadState Options m) => m [LogData]
 readLogFromStdin = do
-  contents <- getContents
-  return $ parseLines . lines $ contents
+  o <- get
+  contents <- liftIO $ getContents
+  return $ parseLines o . lines $ contents
 
 readLogEntries :: (MonadIO m, MonadState Options m) => [String] -> m [LogData]
-readLogEntries []    = liftIO $ readLogFromStdin
-readLogEntries (f:_) = liftIO $ readLogFile f
+readLogEntries []    = readLogFromStdin
+readLogEntries (f:_) = readLogFile f

@@ -28,7 +28,7 @@ defaultOptions = Options
   , optStartTime          = Nothing
   , optEndTime            = Nothing
   , optSplitAll           = False
-  , optIgnoreParseErrors  = True
+  , optIgnoreParseErrors  = False
   }
 
 toUTCTime :: String -> UTCTime

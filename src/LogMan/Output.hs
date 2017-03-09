@@ -6,7 +6,7 @@ module LogMan.Output
 import Prelude hiding             (putStrLn, appendFile, concat, error)
 import Control.Monad.State
 import Data.ByteString.Lazy       (ByteString)
-import Data.ByteString.Lazy.Char8 (putStrLn, appendFile)
+import Data.ByteString.Lazy.Char8 (putStrLn, appendFile, pack)
 import Data.Monoid ((<>))
 import Data.Text.Lazy             (Text, concat, unpack)
 import Data.Text.Lazy.Encoding    (encodeUtf8)
@@ -28,18 +28,19 @@ writeMinimal ((le,_):es) = do
   writeMinimal es
 
 getFilename :: LogEntry -> FilePath
-getFilename LogEntry { username  = Nothing } = "other.log"
-getFilename LogEntry { sessionId = Nothing } = "other.log"
+getFilename LogEntry { username  = Nothing  } = "other.log"
+getFilename LogEntry { username  = Just "-" } = "other.log"
+getFilename LogEntry { sessionId = Nothing  } = "other.log"
 getFilename LogEntry { sessionId = Just s, username = Just u } = 
   unpack $ u <> "." <> s <> ".log"
 
 output :: (MonadIO m, MonadState Options m) => LogEntry -> ByteString -> m ()
 output le s = do
   o <- get
-  if optSplitAll o then liftIO $ appendFile (getFilename le) s
+  if optSplitAll o then liftIO $ appendFile (getFilename le) (s <> pack "\n")
   else case optOutputFile o of
     Nothing -> liftIO $ putStrLn s
-    Just f  -> liftIO $ appendFile f s
+    Just f  -> liftIO $ appendFile f (s <> pack "\n")
 
 writeOutput :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
 writeOutput es = do
