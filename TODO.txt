@@ -4,10 +4,11 @@ TODO:
 -pretty printing json
 -Option to show only incoming API requests, responses, and msg publication
 -Check if Aeson allows using a prefix on record names
--Add an option to print errors, otherwise ignore them
+-Option to filter by log level (need constants that correspond to the bunyan numerical values)
 -Add a version number and -v option
--mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
 -update readme with build instructions and usage info / examples
+-Add an option to calculate statistics for requests, responses based on various things (user, code, path etc.), min, max, avg durations.
+   - This needs the whole file and will break laziness
 
 ###-Command line arguments
 ###-Filtering based on provided criteria
@@ -20,7 +21,8 @@ TODO:
 ###-Option to specify start/end times
 ###-Monad for filters
 ###-Refactor Output.hs
-
+###-mode to split the input file into files <username>.<sid>.log with pretty printing (or not)
+###-Add an option to print errors, otherwise ignore them
 
 Command Line Arguments (first phase)
 
