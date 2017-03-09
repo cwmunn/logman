@@ -10,23 +10,25 @@ import Data.Time.Clock
 import System.Console.GetOpt
 
 data Options = Options
-  { optSessionId   :: Maybe Text
-  , optUsername    :: Maybe Text
-  , optOutputFile  :: Maybe FilePath
-  , optMessageOnly :: Bool
-  , optStartTime   :: Maybe UTCTime
-  , optEndTime     :: Maybe UTCTime
-  , optSplitAll    :: Bool
+  { optSessionId          :: Maybe Text
+  , optUsername           :: Maybe Text
+  , optOutputFile         :: Maybe FilePath
+  , optMessageOnly        :: Bool
+  , optStartTime          :: Maybe UTCTime
+  , optEndTime            :: Maybe UTCTime
+  , optSplitAll           :: Bool
+  , optIgnoreParseErrors  :: Bool
   } deriving Show
 
 defaultOptions = Options
-  { optSessionId   = Nothing
-  , optUsername    = Nothing
-  , optOutputFile  = Nothing
-  , optMessageOnly = False
-  , optStartTime   = Nothing
-  , optEndTime     = Nothing
-  , optSplitAll    = False
+  { optSessionId          = Nothing
+  , optUsername           = Nothing
+  , optOutputFile         = Nothing
+  , optMessageOnly        = False
+  , optStartTime          = Nothing
+  , optEndTime            = Nothing
+  , optSplitAll           = False
+  , optIgnoreParseErrors  = True
   }
 
 toUTCTime :: String -> UTCTime
@@ -55,6 +57,9 @@ options =
   , Option ['a']     ["split-all"]
         (NoArg (\ opts -> opts { optSplitAll = True }))
         "split activity into user/session based files"
+  , Option ['i']     ["ignore-parse-errors"]
+        (NoArg (\ opts -> opts { optIgnoreParseErrors = True }))
+        "ignore parsing errors"
   ]
 
 parseOptions :: [String] -> IO (Options, [String])
