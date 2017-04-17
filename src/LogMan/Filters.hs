@@ -31,14 +31,14 @@ usernameFilter es = do
   o <- get
   case optUsername o of
     Nothing -> return es
-    f       -> return $ filter (\(e, r) -> (username e) == f) es
+    f       -> return $ filter (\(e, r) -> (logUsername e) == f) es
 
 sessionFilter :: (MonadState Options m) => [LogData] -> m [LogData]
 sessionFilter es = do
   o <- get
   case optSessionId o of
     Nothing  -> return es
-    f        -> return $ filter (\(e, r) -> (sessionId e) == f) es
+    f        -> return $ filter (\(e, r) -> (logSessionId e) == f) es
 
 applyFilters :: (MonadState Options m) => [LogData] -> m [LogData]
 applyFilters es = sessionFilter es >>= usernameFilter >>= startTimeFilter >>= endTimeFilter

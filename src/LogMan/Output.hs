@@ -24,14 +24,14 @@ writeFullOutput ((le,r):es) = do
 writeMinimal :: (MonadIO m, MonadState Options m) => [LogData] -> m ()
 writeMinimal [] = return ()
 writeMinimal ((le,_):es) = do 
-  output le $ encodeUtf8 $ concat $ (time le) : " " : (msg le) : []
+  output le $ encodeUtf8 $ concat $ (logTime le) : " " : (logMsg le) : []
   writeMinimal es
 
 getFilename :: LogEntry -> FilePath
-getFilename LogEntry { username  = Nothing  } = "other.log"
-getFilename LogEntry { username  = Just "-" } = "other.log"
-getFilename LogEntry { sessionId = Nothing  } = "other.log"
-getFilename LogEntry { sessionId = Just s, username = Just u } = 
+getFilename LogEntry { logUsername  = Nothing  } = "other.log"
+getFilename LogEntry { logUsername  = Just "-" } = "other.log"
+getFilename LogEntry { logSessionId = Nothing  } = "other.log"
+getFilename LogEntry { logSessionId = Just s, logUsername = Just u } = 
   unpack $ u <> "." <> s <> ".log"
 
 output :: (MonadIO m, MonadState Options m) => LogEntry -> ByteString -> m ()

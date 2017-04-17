@@ -13,7 +13,7 @@ convertTime :: Text -> UTCTime
 convertTime t = read $ unpack $ replace "T" " " t
 
 isBeforeTime :: LogEntry -> UTCTime -> Bool
-isBeforeTime e endTime = convertTime (time e) < endTime
+isBeforeTime e endTime = convertTime (logTime e) < endTime
 
 isAfterTime :: LogEntry -> UTCTime -> Bool
-isAfterTime e starTime = convertTime (time e)  > starTime
+isAfterTime e starTime = convertTime (logTime e)  > starTime
