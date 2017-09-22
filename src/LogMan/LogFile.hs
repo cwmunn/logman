@@ -5,7 +5,7 @@ module LogMan.LogFile
 
 import Prelude hiding             (readFile, lines, getContents)
 import Control.Monad.State
-import Data.Aeson
+import Data.Aeson hiding          (Options)
 import Data.ByteString.Lazy       (ByteString, readFile, getContents)
 import Data.ByteString.Lazy.Char8 (lines, unpack)
 import Data.Monoid                ((<>))
